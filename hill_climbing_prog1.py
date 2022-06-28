@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 #A partir d'un graphe contenant des cycles, notre objectif est de proposer un 
 #coupe-cycle en suivant l'algorithme de Hill Climbing. Le but est de proposer une liste
 #de sommet "cassant" tous les cycles existants.
-G=nx.erdos_renyi_graph(n=10, p=0.3, seed=10, directed=True)
+G=nx.erdos_renyi_graph(n=15, p=0.4, seed=10, directed=True)
 cycles=list(nx.simple_cycles(G))
 
 
@@ -42,12 +42,13 @@ while True:
     current_value_cycles=states_nodes_costs[best_neighbor_state_node]
     
 
-#A partir de graphes de plus de 15 sommets (55 secondes d'execution)
-# sur une machine Ryzen 7 3700U + 8GO RAM) les temps de calculs deviennet très longs.
-#--> Problématique de ce NP-problème.
-#Il faut donc rechercher une fonction de score moins coûteuse.
+#A partir de graphes de plus de 15 sommets (15.4 secondes d'execution)
+#sur une machine Ryzen 7 3700U + 8GO RAM) les temps de calculs deviennet très longs.
+#La fonction coût est très coûteuse, la recherche de l'ensemble des cycles est un NP-problem
+#Ainsi, l'algo serait grandement amélioré avec une fonction coût avec une complexité moindre.
+#De plus, Hill Climbing nous demande à chaque itération de lancer un calcul de coût pour chacun des états-voisins.
 print("coupe-cycle : ", coupe_cycle)
 
-nx.draw(G,with_labels=True)
-plt.draw()
-plt.show()
+#nx.draw(G,with_labels=True)
+#plt.draw()
+#plt.show()
