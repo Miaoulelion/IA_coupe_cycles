@@ -1,16 +1,27 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import random
 
 #A partir d'un graphe contenant des cycles, notre objectif est de proposer un 
 #coupe-cycle en suivant l'algorithme de Hill Climbing. Le but est de proposer une liste
 #de sommet "cassant" tous les cycles existants.
-G=nx.erdos_renyi_graph(n=10, p=0.3, seed=10, directed=True)
+G=nx.erdos_renyi_graph(n=1000, p=0.3, seed=10, directed=True)
 cycles=list(nx.simple_cycles(G))
 
 
-#Cette fonction coût retourne un dictionnaire avec pour clef les sommets
-#et pour valeur le nombre de cycles restant dans le graph après suppression dudit sommet
-#On recherche à minimiser cette valeur, nous utiliserons la fonction min() dans l'algo principal pour cela.
+#Fct-score, Le score donné à chaque sommet est le nombre de cycles auxquels il appartient.
+#Plus un sommet appartient à un grand nombre de cycles, plus il est susceptible d'en "casser".
+def getNodesScores(Graphe,list_cycles):
+    results={}
+    for node in Graphe:
+        node_score=0
+        for cycle in list_cycles:
+            node_score=node_score+cycle.count(node)
+        results[node]=int(node_score)
+    return results
+
+
+
 def getFonctionCout(graph):
     results={}
     current_graph=graph.copy()
@@ -23,8 +34,11 @@ def getFonctionCout(graph):
 
 
 
+
+
 current_value_cycles=len(cycles)
 coupe_cycle=[]
+
 
 #L'état but est de ne plus avoir de cycles.
 #La solution voisine est la solution actuelle moins le sommet qui lors de sa suppression permet 
@@ -32,6 +46,13 @@ coupe_cycle=[]
 while True: 
     states_nodes_costs=getFonctionCout(G)
     best_neighbor_state_node=min(states_nodes_costs, key = lambda x: states_nodes_costs[x])
+
+    temp=100
+    alea_neighbor_state_node=random.choice(list(G.nodes))
+    if(temp==0):
+        break
+    
+
     #Ici on vérifie qu'en supprimant ce sommet, on a bien une solution meilleure que la précédente
     #Comparaison entre les deux fonctions coûts "le nombre de cycles restants" 
     #Si ce n'est pas le cas on s'arrête à l'état courant

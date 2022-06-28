@@ -14,6 +14,11 @@ node_explored=[]
 node_in_cycle=[]
 
 
+#La solution précédente hill_climbing_prog1 s'appuyant sur Networkx et la recherche de tous les 
+#cycles du graphe pour notre fonction score était trop coûteuse. 
+#Un cycle est une composante connexe, et même une composante fortement connexe. Grâce à l'algorithme
+#de Kosaraju on peut retrouver les sommets les plus à même de faire partie d'un cycle avec une complexité moindre.
+
 def toExplore(node):
     node_explored.append(node)
     if not node in node_in_cycle:
