@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 G=nx.erdos_renyi_graph(n=15, p=0.4, seed=10, directed=True)
 cycles=list(nx.simple_cycles(G))
 
-
 #Cette fonction coût retourne un dictionnaire avec pour clef les sommets
 #et pour valeur le nombre de cycles restant dans le graph après suppression dudit sommet
 #On recherche à minimiser cette valeur, nous utiliserons la fonction min() dans l'algo principal pour cela.
@@ -44,9 +43,8 @@ while True:
 
 #A partir de graphes de plus de 15 sommets (15.4 secondes d'execution)
 #sur une machine Ryzen 7 3700U + 8GO RAM) les temps de calculs deviennet très longs.
-#La fonction coût est très coûteuse, la recherche de l'ensemble des cycles est un NP-problem
-#Ainsi, l'algo serait grandement amélioré avec une fonction coût avec une complexité moindre.
-#De plus, Hill Climbing nous demande à chaque itération de lancer un calcul de coût pour chacun des états-voisins.
+#La fonction coût est très coûteuse, ce qui rend l'algo très coûteux.
+#Hill Climbing nous demande à chaque itération de lancer un calcul de coût pour chacun des états-voisins.
 print("coupe-cycle : ", coupe_cycle)
 
 #nx.draw(G,with_labels=True)

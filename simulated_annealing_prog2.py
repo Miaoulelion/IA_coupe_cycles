@@ -6,38 +6,60 @@ import math
 #A partir d'un graphe contenant des cycles, notre objectif est de proposer un 
 #coupe-cycle en suivant l'algorithme de simulated annealing. Le but est de proposer une liste
 #de sommet "cassant" tous les cycles existants.
-G=nx.erdos_renyi_graph(n=8, p=0.4, seed=10, directed=True)
-cycles=list(nx.simple_cycles(G))
+G=nx.erdos_renyi_graph(n=125, p=0.3, seed=15, directed=True)
+
+nodes_strongly_connected=list(nx.strongly_connected_components(G))
+list_nodes=set()
+for components in nodes_strongly_connected:
+    if(len(components)>1):
+        for node in components:
+            list_nodes.add(node)
+cycles=list(list_nodes)
 
 
-#Fct-score, Le score donné à chaque sommet est le nombre de cycles auxquels il appartient.
-#Plus un sommet appartient à un grand nombre de cycles, plus il est susceptible d'en "casser".
+
+#On renvoie le nombre de sommets appartennant à une composante fortement connexe dans le graphe de taille supérieure à 1 sommet.
+def getNumberOfNodesStronglyConnected(Graph):
+    nodes_strongly_connected=list(nx.strongly_connected_components(Graph))
+    list_nodes=set()
+    for components in nodes_strongly_connected:
+        if(len(components)>1):
+            for node in components:
+                list_nodes.add(node)
+    return len(list_nodes)
+
+
+
+#Cette fonction coût retourne un dictionnaire avec pour clef les sommets
+#et pour valeur le nombre de sommets restant dans une composante fortement connexe après suppression dudit sommet
+#On recherche à minimiser cette valeur, nous utiliserons la fonction min() dans l'algo principal pour cela.
 def getFonctionCout(graph):
     results={}
     current_graph=graph.copy()
     graph_copy=graph.copy()
     for node in graph_copy.nodes:
         current_graph.remove_node(node)
-        results[node]=int(len(list(nx.simple_cycles(current_graph))))
+        results[node]=int(getNumberOfNodesStronglyConnected(current_graph))
         current_graph=graph_copy.copy()
     return results
+
 
 def getFonctionCout(graph,node):
     current_graph=graph.copy()
     current_graph.remove_node(node)
-    return int(len(list(nx.simple_cycles(current_graph))))
+    return int(getNumberOfNodesStronglyConnected(current_graph))
 
 current_value_cycles=len(cycles)
 coupe_cycle=[]
 
 initial_temp = 0.8
 final_temp = 0
-alpha = 0.04
+alpha = 0.004
 current_temp = initial_temp
 #L'état but est de ne plus avoir de cycles.
 #La solution voisine est la solution actuelle moins un sommet tiré aléatoirement et qui supprime un cycle
 # ou bien qui est conservé selon une certaines probabilité dans le cas contraire.
-while current_temp > final_temp: 
+while current_temp > final_temp and getNumberOfNodesStronglyConnected(G)>0: 
     alea_neighbor_state_node=random.choice(list(G.nodes))
     next_cost=getFonctionCout(G, alea_neighbor_state_node)
     delta_E=next_cost - current_value_cycles
@@ -57,13 +79,13 @@ while current_temp > final_temp:
     current_temp -= alpha
 
 
-print("coupe-cycle : ", coupe_cycle)
+
+print("coupe-cycle : ", len(coupe_cycle))
 
 #nx.draw(G,with_labels=True)
 #plt.draw()
 #plt.show()
 
-#A partir de graphes d'un certain nombr ede sommets, les calculs sont très longs,(5 secondes d'execution pour 15 sommets)
-#sur une machine Ryzen 7 3700U + 8GO RAM) les temps de calculs deviennet très longs.
+#A partir de graphes d'un certain nombr ede sommets, les calculs étaient très longs, 5 secondes d'execution pour 15 sommets
+#avec l'ancienne fonction coût. Ce temps pour le même nombre de sommet a été divisé par 3.
 #Le temps d'execution de annealing est moins long car il demande de calculer le coût d'un unique état tiré au sort.
-#  
