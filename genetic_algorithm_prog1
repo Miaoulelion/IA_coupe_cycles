@@ -1,0 +1,87 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+from random import *
+import random
+import math
+
+
+#A partir d'un graphe contenant des cycles, notre objectif est de proposer un 
+#coupe-cycle en suivant l'algorithme de simulated annealing. Le but est de proposer une liste
+#de sommet "cassant" tous les cycles existants.
+G=nx.erdos_renyi_graph(n=15, p=0.4, seed=10, directed=True)
+cycles=list(nx.simple_cycles(G))
+INDIVIDUAL_TALL=8
+POPULATION_TALL=30
+
+def selectedInitialIndividual(Graph, tall):
+    graph_copy=Graph.copy()
+    list_nodes=list(graph_copy.nodes)
+    randomSelection=[]
+    #Il faut que la taille soit inférieur au nombre de sommets du graph
+    while len(randomSelection)<tall:
+        selection=random.choices(list_nodes)
+        if not selection[0] in randomSelection:
+            randomSelection.append(int(selection[0]))
+    return randomSelection
+
+
+#En fonction d'un invidiu (un set de sommets) on renvoie le nombre de sommets dans une
+#composante fortement connexe. Plus ce nombre est important, moins la solution est bonne.
+#On cherche à minimiser la fitness
+def fitnessFunction(individual, Graph):
+    graph_copy=Graph.copy()
+    graph_copy.remove_nodes_from(individual)
+    node_strongly_connected=list(nx.strongly_connected_components(graph_copy))
+    list_nodes=set()
+    for components in node_strongly_connected:
+        if(len(components)>1):
+            for node in components:
+                list_nodes.add(node)
+    return len(list_nodes)/len(Graph.nodes)
+
+
+def reproduce(x,y):
+    crossover_point = random.randint(0,INDIVIDUAL_TALL-1)
+    x_part1=x[crossover_point:]
+    x_part2=x[:crossover_point]
+    y_part1=y[crossover_point:]
+    y_part2=y[:crossover_point]
+    child1=x_part1+y_part2
+    child2=y_part1+x_part2
+    return child1,child2
+
+def sortBestParents(list_parents, Graph):
+    fitness_values=[]
+    for parent in list_parents:
+        fitness_values.append(fitnessFunction(parent,Graph))
+    sorted_parents=[x for _,x in sorted(zip(fitness_values,list_parents))]
+    return sorted_parents
+
+
+population=list()
+#On créé une population, une liste d'individus
+for i in range(POPULATION_TALL):
+    population.append(selectedInitialIndividual(G,INDIVIDUAL_TALL))
+
+for i in range(POPULATION_TALL):
+    x1=random.choices(population)[0]
+    y1=random.choices(population)[0]
+    x2=random.choices(population)[0]
+    y2=random.choices(population)[0]
+    parents=[x1,y1,x2,y2]
+
+    sorted_parents=sortBestParents(parents,G)
+    child1, child2=reproduce(sorted_parents[0],sorted_parents[1])
+    child3, child4=reproduce(sorted_parents[2],sorted_parents[3])
+    
+    if fitnessFunction(child1,G)==0.0:
+        print(child1)
+    elif fitnessFunction(child2,G)==0.0:
+        print(child2)
+    elif fitnessFunction(child3,G)==0.0:
+        print(child3)
+    elif fitnessFunction(child4,G)==0.0:
+        print(child4)
+
+
+

@@ -4,13 +4,13 @@ import math
 from random import *
 import random
 
-from scipy.fftpack import ss_diff
+#from scipy.fftpack import ss_diff
 
 
 
 #Génération d'un grapge orienté alétaoire selon le modèle Erdős–Rényi model
 
-D = nx.fast_gnp_random_graph(10, 0.3, seed=1, directed=True)
+D = nx.erdos_renyi_graph(n=10, p=0.3, seed=10, directed=True)
 #print(D.nodes)
 #print(D.edges)
 
@@ -42,9 +42,7 @@ def GetHighestValueNeighbour(graph):
     allNodesInGraph = graph.nodes
     print('allNodesInGraph',type(allNodesInGraph))
     bestNodeToErase = list(allNodesInGraph)[0]
-    
     NumberOfNodesInNeighbourGraph = math.inf
-    
     for node in allNodesInGraph:
         #print(node)
         a = graph.copy()        
@@ -64,22 +62,7 @@ def GetHighestValueNeighbour(graph):
 
 #print(GetHighestValueNeighbour(D))
 
-def Hill_Climbing_method(graph):
-    #Etat initial revient à sélectionner tous les nodes
-    current = graph.copy()
-    while True:
-        print("number of nodes current", NumberNodeInList(current))
-        neighbour = GetHighestValueNeighbour(current)
-        print("number of nodes neighbour", NumberNodeInList(neighbour))
-        print(neighbour.nodes)
-        if NumberNodeInList(neighbour) >= NumberNodeInList(current) or NumberNodeInList(current) ==0:
-            return current
-        
-        current.clear()
-        
-        print('on est la')
-        current = neighbour.copy()
-        neighbour.clear()
+
     
 
 #graphToTest = Hill_Climbing_method(D)
@@ -257,7 +240,8 @@ def GeneticAlgorythm(graph):
         population = [child1graph.copy(), child2graph.copy()]
         child1graph.clear()
         child2graph.clear()
-        
-        
-        
+    
+
         print(population)
+
+GeneticAlgorythm(D)

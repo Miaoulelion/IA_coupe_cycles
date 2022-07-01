@@ -6,7 +6,7 @@ import math
 #A partir d'un graphe contenant des cycles, notre objectif est de proposer un 
 #coupe-cycle en suivant l'algorithme de simulated annealing. Le but est de proposer une liste
 #de sommet "cassant" tous les cycles existants.
-G=nx.erdos_renyi_graph(n=125, p=0.3, seed=15, directed=True)
+G=nx.erdos_renyi_graph(n=100, p=0.9, seed=48, directed=True)
 
 nodes_strongly_connected=list(nx.strongly_connected_components(G))
 list_nodes=set()
@@ -69,9 +69,9 @@ while current_temp > final_temp and getNumberOfNodesStronglyConnected(G)>0:
         coupe_cycle.append(alea_neighbor_state_node)
         current_value_cycles=next_cost
     else:
-        if random.uniform(0, 1) < math.exp(delta_E*(-1) -1/ current_temp):
+        if random.uniform(0, 1) < math.exp(delta_E*(-1) +1/ current_temp):
             #Comme la logique est inversée avec une fonction coût, il est nécessaire de prendre l'opposé de notre delta_E.
-            #On soustrait par -1 pour que lorsque delta_e soit égal à 0, l'intérieur de l'exposant reste négatif
+            #On soustrait par 1 pour que lorsque delta_e soit égal à 0, l'intérieur de l'exposant reste négatif
             #et que plus current_temp tend vers 0, plus la probabilité diminue.
             G.remove_node(alea_neighbor_state_node)
             coupe_cycle.append(alea_neighbor_state_node)

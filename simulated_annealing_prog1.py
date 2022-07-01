@@ -47,7 +47,7 @@ while current_temp > final_temp:
         coupe_cycle.append(alea_neighbor_state_node)
         current_value_cycles=next_cost
     else:
-        if random.uniform(0, 1) < math.exp(delta_E*(-1) -1/ current_temp):
+        if random.uniform(0, 1) < math.exp(delta_E*(-1) +1/ current_temp):
             #Comme la logique est inversée avec une fonction coût, il est nécessaire de prendre l'opposé de notre delta_E.
             #On soustrait par -1 pour que lorsque delta_e soit égal à 0, l'intérieur de l'exposant reste négatif
             #et que plus current_temp tend vers 0, plus la probabilité diminue.

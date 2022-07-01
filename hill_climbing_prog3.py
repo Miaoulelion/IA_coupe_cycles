@@ -4,8 +4,53 @@ import matplotlib.pyplot as plt
 #A partir d'un graphe contenant des cycles, notre objectif est de proposer un 
 #coupe-cycle en suivant l'algorithme de Hill Climbing. Le but est de proposer une liste
 #de sommet "cassant" tous les cycles existants.
-G=nx.erdos_renyi_graph(n=100, p=0.9, seed=48, directed=True)
+G=nx.erdos_renyi_graph(n=20, p=0.05, seed=15, directed=True)
 
+def getNumberOfNodesInCycles(Graph):
+    list_nodes=set()
+    for node in Graph:
+        if Graph.successors(node):
+            return 0
+    return 1
+
+
+
+
+
+node_explored=[]
+node_in_cycle=[]
+
+nodes_visited=set()
+
+''''def isInCycle(Graph, start_node):
+    return toExplore(Graph, start_node,start_node)
+
+def toExplore(Graph,node, start):
+    nodeIsInCycle=False
+    nodes_neighbors=set(Graph.neighbors(node))
+    nodes_neighbors_not_explored=nodes_neighbors.difference(nodes_visited)
+    for node_neighbor in nodes_neighbors_not_explored:
+        print(node_neighbor)
+        nodes_visited.add(node_neighbor)
+        if node_neighbor==start:
+            nodeIsInCycle= True
+        toExplore(Graph,node_neighbor,start)
+    return nodeIsInCycle
+
+
+print("cycle en  : ", isInCycle(G,0))
+'''
+
+def isInCycle(Graph, node):
+    for element in nx.dfs_successors(Graph,node):
+        print(element)
+        for e in nx.dfs_successors(Graph,node)[element]:
+            print(e)
+
+print(nx.dfs_successors(G,0))
+isInCycle(G,0)
+
+'''
 nodes_strongly_connected=list(nx.strongly_connected_components(G))
 list_nodes=set()
 for components in nodes_strongly_connected:
@@ -32,6 +77,9 @@ def getNumberOfNodesStronglyConnected(Graph):
             for node in components:
                 list_nodes.add(node)
     return len(list_nodes)
+
+
+
 
 #Cette fonction coût retourne un dictionnaire avec pour clef les sommets
 #et pour valeur le nombre de sommets restant dans une composante fortement connexe après suppression dudit sommet
@@ -71,7 +119,7 @@ while True:
 #A partir de graphes de plus de 15 sommets : 15.4 secondes d'execution avec l'ancienne fct coût, 2.5 sec maintenant.
 #sur une machine Ryzen 7 3700U + 8GO RAM) 
 print("coupe-cycle : ", len(coupe_cycle))
-
-#nx.draw(G,with_labels=True)
-#plt.draw()
-#plt.show()
+'''
+nx.draw(G,with_labels=True)
+plt.draw()
+plt.show()
