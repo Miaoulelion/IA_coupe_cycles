@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 #A partir d'un graphe contenant des cycles, notre objectif est de proposer un 
 #coupe-cycle en suivant l'algorithme de Hill Climbing. Le but est de proposer une liste
 #de sommet "cassant" tous les cycles existants.
-G=nx.erdos_renyi_graph(n=100, p=0.9, seed=48, directed=True)
+G=nx.erdos_renyi_graph(n=13, p=0.4, seed=10, directed=True)
 
 nodes_strongly_connected=list(nx.strongly_connected_components(G))
 list_nodes=set()

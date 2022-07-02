@@ -8,12 +8,12 @@ import math
 #A partir d'un graphe contenant des cycles, notre objectif est de proposer un 
 #coupe-cycle en suivant l'algorithme de simulated annealing. Le but est de proposer une liste
 #de sommet "cassant" tous les cycles existants.
-G=nx.erdos_renyi_graph(n=15, p=0.4, seed=10, directed=True)
+G=nx.erdos_renyi_graph(n=13, p=0.4, seed=10, directed=True)
 cycles=list(nx.simple_cycles(G))
 #La taille de l'individu doit être en correspondance avec la taille
 #de la potentielle solution par rapport au graphe donné.
-INDIVIDUAL_TALL=6
-POPULATION_TALL=30
+INDIVIDUAL_TALL=4
+POPULATION_TALL=50
 BAD_FITNESS_CURSOR=0.30
 
 def selectedInitialIndividual(Graph, tall):
@@ -82,8 +82,10 @@ while True:
     child3=[]
     child4=[]
 
-    #Si l'un des parents a un score trop faible, on l'élimine de la reproduction
-    fitness_score_last_parent=fitness_values_sorted[3]/sum(fitness_values_sorted)
+    #Si l'un des parents (le dernier) a un score trop mauvais (ici élevé)
+    #on l'élimine de la reproduction et on le remplace par un meilleur reproducteur.
+    total_fitness=1 if sum(fitness_values_sorted)==0 else sum(fitness_values_sorted) #On évite la division par 0...
+    fitness_score_last_parent=fitness_values_sorted[3]/total_fitness
     if(fitness_score_last_parent>BAD_FITNESS_CURSOR):
         child3, child4=reproduce(sorted_parents[2],sorted_parents[1])
     else:
