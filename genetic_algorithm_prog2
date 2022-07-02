@@ -90,19 +90,19 @@ while True:
         child3, child4=reproduce(sorted_parents[2],sorted_parents[3])
     
     if fitnessBrutFunction(child1,G)==0.0:
-        print(child1)
+        print("taille solution : ",child1)
         G.remove_nodes_from(child1)
         break
     elif fitnessBrutFunction(child2,G)==0.0:
-        print(child2)
+        print("taille solution : ",len(child2))
         G.remove_nodes_from(child2)
         break
     elif fitnessBrutFunction(child3,G)==0.0:
-        print(child3)
+        print("taille solution : ",child3)
         G.remove_nodes_from(child3)
         break
     elif fitnessBrutFunction(child4,G)==0.0:
-        print(child4)
+        print("taille solution : " ,child4)
         G.remove_nodes_from(child4)
         break
 
