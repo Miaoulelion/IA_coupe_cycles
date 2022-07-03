@@ -29,7 +29,7 @@ def getFonctionCout(graph,node):
 
 current_value_cycles=len(cycles)
 coupe_cycle=[]
-
+#On fixe une température initiale, un delta de température entre chaque itération et une température finale
 initial_temp = 0.8
 final_temp = 0
 alpha = 0.04
@@ -54,6 +54,7 @@ while current_temp > final_temp:
             G.remove_node(alea_neighbor_state_node)
             coupe_cycle.append(alea_neighbor_state_node)
             current_value_cycles=next_cost
+    #On décremente la température
     current_temp -= alpha
 
 

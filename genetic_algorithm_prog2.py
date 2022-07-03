@@ -86,11 +86,14 @@ while True:
     #on l'élimine de la reproduction et on le remplace par un meilleur reproducteur.
     total_fitness=1 if sum(fitness_values_sorted)==0 else sum(fitness_values_sorted) #On évite la division par 0...
     fitness_score_last_parent=fitness_values_sorted[3]/total_fitness
+    #Ici on réalise le calcul de la "vraie fitness", à savoir le nombre de sommets restants dans une composante fortement connexe
+    #après suppression de l'individu du graphe, divisé par la somme des nombre de sommets restants pour les autres parents
     if(fitness_score_last_parent>BAD_FITNESS_CURSOR):
         child3, child4=reproduce(sorted_parents[2],sorted_parents[1])
     else:
         child3, child4=reproduce(sorted_parents[2],sorted_parents[3])
-    
+    #Si on constate qu'on a trouvé une solution, on sort.
+    #La solution est un individu issu du croisement de deux parents.
     if fitnessBrutFunction(child1,G)==0.0:
         print("taille solution : ",child1)
         G.remove_nodes_from(child1)
@@ -107,7 +110,7 @@ while True:
         print("taille solution : " ,child4)
         G.remove_nodes_from(child4)
         break
-
+    #On ajoute les nouvelles générations à la population
     population.append(child1)
     population.append(child2)
     population.append(child3)
