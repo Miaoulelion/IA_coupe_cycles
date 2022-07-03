@@ -55,6 +55,17 @@ def reproduce(x,y):
     child2=y_part1+x_part2
     return child1,child2
 
+#Mutation, l'individu perd un élément de son "génome" au profit d'un élément extérieur
+#On retire un sommet pris aléatoirement dans l'individu et on le remplace par un sommet pris au hasard dans le graphe
+def mutate(individual, graph):
+    node=random.choice(list(graph.nodes))
+    index_mutation=random.randint(0,len(individual)-1)
+    if not node in individual:
+        individual.pop(index_mutation)
+        individual.insert(index_mutation,node)
+
+
+
 #On classe les parents en fonction de leurs fitness, on prend les meilleurs reproducteurs
 #pour les reproduire ensemble et avoir de meilleurs enfants.
 def sortBestParents(list_parents, Graph):
@@ -81,7 +92,6 @@ while True:
     child1, child2=reproduce(sorted_parents[0],sorted_parents[1])
     child3=[]
     child4=[]
-
     #Si l'un des parents (le dernier) a un score trop mauvais (ici élevé)
     #on l'élimine de la reproduction et on le remplace par un meilleur reproducteur.
     total_fitness=1 if sum(fitness_values_sorted)==0 else sum(fitness_values_sorted) #On évite la division par 0...
@@ -92,22 +102,33 @@ while True:
         child3, child4=reproduce(sorted_parents[2],sorted_parents[1])
     else:
         child3, child4=reproduce(sorted_parents[2],sorted_parents[3])
+
+    #On met pour chaque fils 5% de chance de mutation
+    if(random.uniform(0,1)<0.05):
+        mutate(child1,G)
+    if(random.uniform(0,1)<0.05):
+        mutate(child2,G)
+    if(random.uniform(0,1)<0.05):
+        mutate(child3,G)
+    if(random.uniform(0,1)<0.05):
+        mutate(child4,G)
+
     #Si on constate qu'on a trouvé une solution, on sort.
     #La solution est un individu issu du croisement de deux parents.
     if fitnessBrutFunction(child1,G)==0.0:
-        print("taille solution : ",child1)
+        print("taille solution : ",len(child1), " " ,child1)
         G.remove_nodes_from(child1)
         break
     elif fitnessBrutFunction(child2,G)==0.0:
-        print("taille solution : ",len(child2))
+        print("taille solution : ",len(child2), " ", child2)
         G.remove_nodes_from(child2)
         break
     elif fitnessBrutFunction(child3,G)==0.0:
-        print("taille solution : ",child3)
+        print("taille solution : ",child3, " ", child3)
         G.remove_nodes_from(child3)
         break
     elif fitnessBrutFunction(child4,G)==0.0:
-        print("taille solution : " ,child4)
+        print("taille solution : " ,child4, " ", child4)
         G.remove_nodes_from(child4)
         break
     #On ajoute les nouvelles générations à la population
