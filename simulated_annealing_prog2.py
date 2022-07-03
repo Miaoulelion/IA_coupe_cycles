@@ -86,6 +86,6 @@ print("coupe-cycle : ", len(coupe_cycle))
 #plt.draw()
 #plt.show()
 
-#A partir de graphes d'un certain nombr ede sommets, les calculs étaient très longs, 5 secondes d'execution pour 15 sommets
-#avec l'ancienne fonction coût. Ce temps pour le même nombre de sommet a été divisé par 3.
+#A partir de graphes d'un certain nombre de sommets, les calculs étaient très longs, 5 secondes d'execution pour 15 sommets
+#avec l'ancienne fonction coût. Ce temps pour le même nombre de sommets a été divisé par 3.
 #Le temps d'execution de annealing est moins long car il demande de calculer le coût d'un unique état tiré au sort.
